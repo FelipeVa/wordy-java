@@ -12,11 +12,15 @@ public class Main {
         ConnectionSource connectionSource = DatabaseManager.getConnection();
         WordRepository wordRepository = new WordRepository(connectionSource);
 
-        Word word = wordRepository.find(1);
+        Word word = new Word("Probando 14");
 
-        word.setValue("Hello World! 3");
+        wordRepository.create(word);
 
-        wordRepository.update(word);
+//        Word word = wordRepository.find(1);
+//
+//        word.setValue("Hello World! x");
+//
+//        wordRepository.update(word);
 
         List<Word> words = wordRepository.all();
 

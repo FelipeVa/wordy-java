@@ -21,6 +21,11 @@ import java.util.List;
 public class ManageWordsDialog extends javax.swing.JFrame {
 
     Word selectedWord;
+    String[] words;
+    String newWord;
+    String modifiedWord;
+
+    Boolean isModifying = false;
 
     /**
      * Creates new form ManageWordsDialog
@@ -36,48 +41,261 @@ public class ManageWordsDialog extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() throws Exception {
-
-        ConnectionSource connectionSource = DatabaseManager.getConnection();
-        WordRepository wordRepository = new WordRepository(connectionSource);
+    private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        WordLista = new javax.swing.JList<>();
+        try {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(null);
+            ConnectionSource connectionSource = DatabaseManager.getConnection();
+            WordRepository wordRepository = new WordRepository(connectionSource);
 
-        List<Word> words = wordRepository.all();
-        String[] strings = words.stream().map(Word::getValue).toArray(String[]::new);
+            words = wordRepository.all().stream().map(Word::getValue).toArray(String[]::new);
+            WordList = new javax.swing.JList<>();
+            DeleteWordButton = new javax.swing.JButton();
+            NewWordField = new javax.swing.JTextField();
+            AddNewWordButton = new javax.swing.JButton();
+            ModifyWordButton = new javax.swing.JButton();
+            jSeparator1 = new javax.swing.JSeparator();
+            ModifyWordPanel = new javax.swing.JPanel();
+            ModifiedWordField = new javax.swing.JTextField();
+            SaveModifiedWordButton = new javax.swing.JButton();
 
-        WordLista.setModel(new javax.swing.AbstractListModel<String>() {
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+            setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+            getContentPane().setLayout(null);
 
-        WordLista.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                try {
-                    selectedWord = wordRepository.findByValue(WordLista.getSelectedValue());
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
+            WordList.setModel(new javax.swing.AbstractListModel<String>() {
+                public int getSize() { return words.length; }
+                public String getElementAt(int i) { return words[i]; }
+            });
+            WordList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+                public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                    WordListValueChanged(evt);
                 }
-            }
-        });
-
-        jScrollPane1.setViewportView(WordLista);
-
-        jScrollPane2.setViewportView(jScrollPane1);
+            });
+            jScrollPane2.setViewportView(WordList);
+            connectionSource.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         getContentPane().add(jScrollPane2);
         jScrollPane2.setBounds(20, 70, 360, 110);
 
-        pack();
+        DeleteWordButton.setText("Delete");
+        DeleteWordButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteWordButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(DeleteWordButton);
+        DeleteWordButton.setBounds(400, 70, 110, 23);
 
-        connectionSource.close();
+        NewWordField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                NewWordFieldKeyTyped(evt);
+            }
+        });
+        getContentPane().add(NewWordField);
+        NewWordField.setBounds(20, 40, 240, 23);
+
+        AddNewWordButton.setText("Add");
+        AddNewWordButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddNewWordButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(AddNewWordButton);
+        AddNewWordButton.setBounds(270, 40, 110, 23);
+
+        ModifyWordButton.setText("Modify");
+        ModifyWordButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ModifyWordButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(ModifyWordButton);
+        ModifyWordButton.setBounds(400, 100, 110, 23);
+        getContentPane().add(jSeparator1);
+        jSeparator1.setBounds(20, 200, 490, 10);
+
+        ModifiedWordField.setEditable(false);
+
+        SaveModifiedWordButton.setText("Save");
+        SaveModifiedWordButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SaveModifiedWordButtonActionPerformed(evt);
+            }
+        });
+
+        ModifyWordPanel.setVisible(false);
+
+        javax.swing.GroupLayout ModifyWordPanelLayout = new javax.swing.GroupLayout(ModifyWordPanel);
+        ModifyWordPanel.setLayout(ModifyWordPanelLayout);
+        ModifyWordPanelLayout.setHorizontalGroup(
+            ModifyWordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ModifyWordPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(ModifiedWordField, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(SaveModifiedWordButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        ModifyWordPanelLayout.setVerticalGroup(
+            ModifyWordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ModifyWordPanelLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addGroup(ModifyWordPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ModifiedWordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SaveModifiedWordButton)))
+        );
+
+        getContentPane().add(ModifyWordPanel);
+        ModifyWordPanel.setBounds(20, 210, 490, 40);
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void WordListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_WordListValueChanged
+        if (evt.getValueIsAdjusting()) {
+            return;
+        }
+
+        if (WordList.getSelectedValue() == null) {
+            return;
+        }
+
+        try {
+
+            ConnectionSource connectionSource = DatabaseManager.getConnection();
+            WordRepository wordRepository = new WordRepository(connectionSource);
+
+            String selectedValue = WordList.getSelectedValue();
+
+            selectedWord = wordRepository.findByValue(selectedValue);
+
+            connectionSource.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }//GEN-LAST:event_WordListValueChanged
+
+    private void DeleteWordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteWordButtonActionPerformed
+        if (selectedWord == null) {
+            return;
+        }
+
+        try {
+
+            ConnectionSource connectionSource = DatabaseManager.getConnection();
+            WordRepository wordRepository = new WordRepository(connectionSource);
+
+            wordRepository.delete(selectedWord);
+
+            SetWordList();
+
+            connectionSource.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }//GEN-LAST:event_DeleteWordButtonActionPerformed
+
+    private void NewWordFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NewWordFieldKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_NewWordFieldKeyTyped
+
+    private void AddNewWordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddNewWordButtonActionPerformed
+        if (NewWordField.getText() == null) {
+            return;
+        }
+
+        try {
+            ConnectionSource connectionSource = DatabaseManager.getConnection();
+            WordRepository wordRepository = new WordRepository(connectionSource);
+
+            wordRepository.create(new Word(NewWordField.getText()));
+
+            SetWordList();
+
+            NewWordField.setText("");
+            
+            connectionSource.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }//GEN-LAST:event_AddNewWordButtonActionPerformed
+
+    private void ModifyWordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyWordButtonActionPerformed
+        if (selectedWord == null) {
+            return;
+        }
+
+        isModifying = !isModifying;
+
+        if (!isModifying) {
+            ModifiedWordField.setText("");
+            ModifiedWordField.setEditable(false);
+            ModifyWordButton.setText("Modify");
+            ModifyWordPanel.setVisible(false);
+            return;
+        }
+
+        ModifyWordPanel.setVisible(true);
+        ModifyWordButton.setText("Cancel");
+        ModifiedWordField.setEditable(true);
+        ModifiedWordField.setText(selectedWord.getValue());
+    }//GEN-LAST:event_ModifyWordButtonActionPerformed
+
+    private void SaveModifiedWordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveModifiedWordButtonActionPerformed
+        try {
+            if (selectedWord == null) {
+                return;
+            }
+
+            if (!isModifying) {
+                return;
+            }
+
+            ConnectionSource connectionSource = DatabaseManager.getConnection();
+            WordRepository wordRepository = new WordRepository(connectionSource);
+
+            selectedWord.setValue(ModifiedWordField.getText());
+
+            wordRepository.update(selectedWord);
+
+            SetWordList();
+
+            ModifiedWordField.setText("");
+            ModifiedWordField.setEditable(false);
+            ModifyWordButton.setText("Modify");
+            ModifyWordPanel.setVisible(false);
+            isModifying = false;
+
+            connectionSource.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }//GEN-LAST:event_SaveModifiedWordButtonActionPerformed
+
+    private void SetWordList() {
+        try {
+
+            ConnectionSource connectionSource = DatabaseManager.getConnection();
+            WordRepository wordRepository = new WordRepository(connectionSource);
+
+            words = wordRepository.all().stream().map(Word::getValue).toArray(String[]::new);
+
+            WordList.setModel(new javax.swing.AbstractListModel<String>() {
+                public int getSize() { return words.length; }
+                public String getElementAt(int i) { return words[i]; }
+            });
+
+            connectionSource.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -113,7 +331,7 @@ public class ManageWordsDialog extends javax.swing.JFrame {
                     ManageWordsDialog window = new ManageWordsDialog();
 
                     window.setVisible(true);
-                    window.setSize(500, 500);
+                    window.setSize(530, 300);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -122,8 +340,15 @@ public class ManageWordsDialog extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList<String> WordLista;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton AddNewWordButton;
+    private javax.swing.JButton DeleteWordButton;
+    private javax.swing.JTextField ModifiedWordField;
+    private javax.swing.JButton ModifyWordButton;
+    private javax.swing.JPanel ModifyWordPanel;
+    private javax.swing.JTextField NewWordField;
+    private javax.swing.JButton SaveModifiedWordButton;
+    private javax.swing.JList<String> WordList;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables
 }
