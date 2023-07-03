@@ -5,6 +5,7 @@
 package Wordy;
 
 import Wordy.Dialogs.ManageWordsDialog;
+import Wordy.Dialogs.PlayGameDialog;
 
 /**
  *
@@ -65,11 +66,14 @@ public class Menu extends javax.swing.JFrame {
         ManageWordsDialog manageWordsDialog = new ManageWordsDialog();
 
         manageWordsDialog.setVisible(true);
-        manageWordsDialog.setSize(500, 500);
+        manageWordsDialog.setSize(530, 300);
     }//GEN-LAST:event_ManageWordsButtonActionPerformed
 
     private void PlayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PlayButtonActionPerformed
-        // TODO add your handling code here:
+        PlayGameDialog window = new PlayGameDialog();
+
+        window.setVisible(true);
+        window.setSize(400, 330);
     }//GEN-LAST:event_PlayButtonActionPerformed
 
     /**

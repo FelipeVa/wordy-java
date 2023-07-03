@@ -45,4 +45,8 @@ public class WordRepository {
     public List<Word> all() throws SQLException {
         return wordDao.queryForAll();
     }
+
+    public Word random() throws SQLException {
+        return wordDao.queryBuilder().orderByRaw("RANDOM()").queryForFirst();
+    }
 }
